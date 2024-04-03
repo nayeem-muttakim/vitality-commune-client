@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/firebase.config.js", "src/context/page.js", "src/components/shared/Navbar/page.jsx", "src/components/shared/Hooks/useAxiosSecure/page.jsx", "src/components/shared/Hooks/useAxios/page.jsx", "src/components/shared/Hooks/useAuth/page.jsx", "src/components/shared/Footer/page.jsx", "src/app/layout.jsx", "src/app/error.jsx", "src/app/loading.jsx", "src/app/not-found.jsx", "src/app/page.jsx"],
   "exclude": ["node_modules"]
 }
