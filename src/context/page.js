@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { createContext } from "react";
 import useAxiosPublic from "@/components/shared/Hooks/useAxiosSecure/page";
@@ -38,11 +39,10 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateInfo = (name, image) => {
+  const updateInfo = (name) => {
     setLoading(true);
     return updateProfile(auth.currentUser, {
       displayName: name,
-      photoURL: image,
     });
   };
 

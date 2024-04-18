@@ -15,9 +15,9 @@ import MenuItem from "@mui/material/MenuItem";
 import logo from "@/assets/logo.png";
 import { Drawer, List, ListItem, ListItemButton } from "@mui/material";
 
-// import useAuth from "../../Hooks/useAuth";
 import Image from "next/image";
 import Link from "next/link";
+import useAuth from "../Hooks/useAuth/page";
 
 const pages = [
   { title: "Home", link: "" },
@@ -30,12 +30,12 @@ const pages = [
 const settings = [
   { title: "My Profile", link: "my-profile" },
   { title: "Leader Board", link: "leader-board" },
-  { title: "Applied Jobs", link: "applied-jobs" },
+  // { title: "Applied Jobs", link: "applied-jobs" },
 ];
 
 function Navbar(props) {
   const { window } = props;
-  // const { user, logOut } = useAuth();
+  const { user, logOut } = useAuth();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -52,7 +52,7 @@ function Navbar(props) {
     setAnchorElUser(null);
   };
   const handleLogout = async () => {
-    // const res = await logOut();
+    const res = await logOut();
     setAnchorElUser(null);
   };
   const drawer = (
@@ -154,8 +154,8 @@ function Navbar(props) {
           </Box>
 
           <Box>
-            {/* {user ? (
-                 <Tooltip title={user?.displayName}>
+            {user ? (
+              <Tooltip title={user?.displayName}>
                 <IconButton onClick={handleOpenUserMenu}>
                   <Avatar
                     sx={{
@@ -166,27 +166,27 @@ function Navbar(props) {
                     src={user?.photoURL}
                   />
                 </IconButton>
-                       </Tooltip>
-              ) : ( */}
-            <Link href="SignIn" style={{ textDecoration: "none" }}>
-              <Typography
-                sx={{
-                  fontSize: 18,
-                  fontWeight: 500,
-                  p: 1,
-                  color: "#000000",
-                  transition: "0.3s",
-                  "&:hover": {
-                    bgcolor: "#809292",
-                    color: "white",
-                    borderRadius: 2,
-                  },
-                }}
-              >
-                Login
-              </Typography>
-            </Link>
-            {/* )} */}
+              </Tooltip>
+            ) : (
+              <Link href="SignIn" style={{ textDecoration: "none" }}>
+                <Typography
+                  sx={{
+                    fontSize: 18,
+                    fontWeight: 500,
+                    p: 1,
+                    color: "#000000",
+                    transition: "0.3s",
+                    "&:hover": {
+                      bgcolor: "#809292",
+                      color: "white",
+                      borderRadius: 2,
+                    },
+                  }}
+                >
+                  Login
+                </Typography>
+              </Link>
+            )}
 
             <Menu
               sx={{ mt: "45px" }}
@@ -215,11 +215,7 @@ function Navbar(props) {
                   </MenuItem>
                 </Link>
               ))}
-              {/* {user && (
-                <MenuItem>
-                  <Link onClick={handleLogout}>Logout</Link>
-                </MenuItem>
-              )} */}
+              {user && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
             </Menu>
           </Box>
         </Toolbar>

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5173",
+    "dev": "next dev -p 5173 --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -20,6 +20,8 @@
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-helmet-async": "^2.0.4",
+    "react-hot-toast": "^2.4.1",
     "styled-components": "^6.1.8"
   },
   "devDependencies": {
