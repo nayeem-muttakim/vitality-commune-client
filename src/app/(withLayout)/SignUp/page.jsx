@@ -1,35 +1,43 @@
 "use client";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { Helmet } from "react-helmet-async";
 import useAuth from "@/components/shared/Hooks/useAuth/page";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { imageUpload } from "../../../components/Utils";
+import Social from "../../../components/shared/Social";
+import useAxiosPublic from "@/components/shared/Hooks/useAxios/page";
 
 const SignUp = () => {
+  const axiosPublic = useAxiosPublic();
   const { signUp, updateInfo } = useAuth();
+  const router = useRouter();
   const handleReg = async (e) => {
     e.preventDefault();
 
     const name = e.target.name.value;
     const email = e.target.email.value;
     const pass = e.target.pass.value;
-
+    const image = e.target.image.files[0];
     try {
+      //upload image
+      const imageData = await imageUpload(image);
       // create user
       const result = await signUp(email, pass);
       // user name and image
-      await updateInfo(name);
+      await updateInfo(name, imageData?.url);
       const userInfo = {
         name: name,
         email: email,
         role: "user",
       };
-      //   await axiosPublic.post("/users", userInfo);
-
+      await axiosPublic.post("/users", userInfo);
+      router.push("/");
       toast.success("Registration Successful");
     } catch (err) {
-        // console.log(err);
-      toast.error('Email Already in use')
+      // console.log(err);
+      toast.error("Email Already in use");
     }
   };
 
@@ -41,6 +49,8 @@ const SignUp = () => {
       <Typography textAlign={"center"} pt={2} variant="h4">
         Create an account
       </Typography>
+      <Social />
+      <Divider sx={{ px: 5, pt: 4 }}>or</Divider>
       <form onSubmit={handleReg}>
         <Grid sx={{ display: "grid", gap: 5, p: 5 }}>
           <TextField
@@ -51,6 +61,7 @@ const SignUp = () => {
             required
           />
 
+          <TextField variant="outlined" name="image" type="file" required />
           <TextField
             label="Email"
             variant="outlined"

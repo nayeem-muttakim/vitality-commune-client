@@ -1,14 +1,13 @@
+"use client";
 import axios from "axios";
+import { signOut } from "firebase/auth";
 import { redirect } from "next/navigation";
 
-// import useAuth from "./useAuth";
-
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3000",
-  // baseURL:'https://handyjobs-server.vercel.app'
+  baseURL: "http://localhost:3001",
+  // baseURL:'https://vitality-commune-server.vercel.app'
 });
 const useAxiosSecure = () => {
-  //   const { logOut } = useAuth();
   // request interceptors to add authorization for every secure call
   axiosSecure.interceptors.request.use(
     function (config) {
@@ -32,7 +31,7 @@ const useAxiosSecure = () => {
       console.log(status);
       // logout user and navigate to login
       if (status === 401 || status === 403) {
-        // await logOut();
+        await signOut();
         redirect("/SignIn");
       }
       return Promise.reject(error);

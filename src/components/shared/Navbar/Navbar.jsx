@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import logo from "@/assets/logo.png";
-import { Drawer, List, ListItem, ListItemButton } from "@mui/material";
+import { Drawer, List } from "@mui/material";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -22,13 +22,13 @@ import useAuth from "../Hooks/useAuth/page";
 const pages = [
   { title: "Home", link: "" },
   { title: "Challenges", link: "challenges" },
-  { title: "Community", link: "community" },
+  // { title: "Community", link: "community" },
   { title: "Help", link: "help" },
   { title: "Resources", link: "resources" },
 ];
 
 const settings = [
-  { title: "My Profile", link: "my-profile" },
+  { title: "My Progress", link: "my-progress" },
   { title: "Leader Board", link: "leader-board" },
   // { title: "Applied Jobs", link: "applied-jobs" },
 ];
@@ -206,7 +206,7 @@ function Navbar(props) {
             >
               {settings.map((setting) => (
                 <Link
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: "none",color:"black" }}
                   key={setting.title}
                   href={`/${setting.link}`}
                 >

@@ -1,10 +1,20 @@
 "use client";
-import { Button, Grid, Input, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Grid,
+  Input,
+  TextField,
+  Typography,
+} from "@mui/material";
 import useAuth from "@/components/shared/Hooks/useAuth/page";
 import Link from "next/link";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Social from "../../../components/shared/Social";
 const SignIn = () => {
+  const router = useRouter();
   const { signIn } = useAuth();
   const handleLog = (e) => {
     e.preventDefault();
@@ -13,7 +23,7 @@ const SignIn = () => {
     signIn(email, pass)
       .then((res) => {
         toast.success("Logged In");
-        // navigate(from);
+        router.push("/");
       })
       .catch((err) => {
         toast.error("Invalid Email or Password");
@@ -30,6 +40,8 @@ const SignIn = () => {
       <Typography pt={2} textAlign={"center"} variant="h4">
         Login
       </Typography>
+      <Social />
+      <Divider sx={{px:5,pt:4}}>or</Divider>
       <form onSubmit={handleLog}>
         <Grid sx={{ display: "grid", gap: 5, p: 5 }}>
           <TextField
