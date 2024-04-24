@@ -4,8 +4,8 @@ import { signOut } from "firebase/auth";
 import { redirect } from "next/navigation";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:3001",
-  // baseURL:'https://vitality-commune-server.vercel.app'
+  // baseURL: "http://localhost:3001",
+  baseURL:'https://vitality-commune-server.vercel.app'
 });
 const useAxiosSecure = () => {
   // request interceptors to add authorization for every secure call

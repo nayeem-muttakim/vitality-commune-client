@@ -27,6 +27,7 @@ const Create = () => {
     const date_range = e.target.date_range.value;
     const goals_milestone = e.target.goals_milestone.value;
     const image = e.target.banner.files[0];
+    const host = user?.email;
 
     try {
       //upload image
@@ -38,6 +39,7 @@ const Create = () => {
         date_range,
         goals_milestone,
         banner: imageData?.url,
+        host,
       };
       axiosSecure.post("/challenges", challengeInfo).then((res) => {
         if (res.data.insertedId) {
