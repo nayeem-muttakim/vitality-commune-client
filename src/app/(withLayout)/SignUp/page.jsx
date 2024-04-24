@@ -24,7 +24,7 @@ const SignUp = () => {
     const pass = e.target.pass.value;
     const image = e.target.image.files[0];
     const toasted = toast.loading("Registering");
-
+  
     try {
       //upload image
       const imageData = await imageUpload(image);

@@ -2,22 +2,55 @@
 import { Textarea } from "@mui/joy";
 import Select from "react-select";
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { SingleInputDateRangeField } from "@mui/x-date-pickers-pro/SingleInputDateRangeField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
+import useAxiosSecure from "@/components/shared/Hooks/useAxiosSecure/page";
+import useAuth from "@/components/shared/Hooks/useAuth/page";
+import toast from "react-hot-toast";
+import { imageUpload } from "@/components/Utils";
 const Create = () => {
   const options = [
-    { value: "Dog", label: "Dog" },
-    { value: "Cat", label: "Cat" },
-    { value: "Fish", label: "Fish" },
-    { value: "Hamster", label: "Hamster" },
-    { value: "Parrot", label: "Parrot" },
-    { value: "Rabbit", label: "Rabbit" },
+    { value: "Fitness", label: "Fitness" },
+    { value: "Nutrition", label: "Nutrition" },
+    { value: "Mental Wellness", label: "Mental Wellness" },
   ];
   const [selectedOption, setSelectedOption] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  const handleChallenge = async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return; // Prevent double submission
+    setIsSubmitting(true);
+    const title = e.target.title.value;
+    const type = selectedOption;
+    const description = e.target.description.value;
+    const date_range = e.target.date_range.value;
+    const goals_milestone = e.target.goals_milestone.value;
+    const image = e.target.banner.files[0];
 
+    try {
+      //upload image
+      const imageData = await imageUpload(image);
+      const challengeInfo = {
+        title,
+        type,
+        description,
+        date_range,
+        goals_milestone,
+        banner: imageData?.url,
+      };
+      axiosSecure.post("/challenges", challengeInfo).then((res) => {
+        if (res.data.insertedId) {
+          setIsSubmitting(false);
+          toast.success("Challenge Added");
+        }
+        // navigate("/dashboard/added-pets");
+      });
+    } catch (err) {
+      setIsSubmitting(false);
+      console.log(err);
+    }
+  };
   return (
     <Box px={1}>
       <Paper
@@ -33,7 +66,7 @@ const Create = () => {
       >
         <Typography variant="h4">Create Challenge</Typography>
       </Paper>
-      <form>
+      <form onSubmit={handleChallenge}>
         <Grid
           sx={{
             display: "grid",
@@ -45,21 +78,6 @@ const Create = () => {
           }}
         >
           <TextField label="Title" name="title" required />
-          <Textarea
-            minRows={3}
-            maxRows={3}
-            name="description"
-            placeholder="Description"
-            required
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              slots={{ field: SingleInputDateRangeField }}
-              name="date_range"
-              label="Data Range"
-              calendars={3}
-            />
-          </LocalizationProvider>
           <Select
             required
             placeholder="Challenge Type"
@@ -68,6 +86,28 @@ const Create = () => {
             onChange={setSelectedOption}
             defaultValue={selectedOption}
           />
+          <Textarea
+            minRows={3}
+            maxRows={3}
+            name="description"
+            placeholder="Description"
+            required
+          />
+          <TextField
+            name="date_range"
+            label="Date Range"
+            placeholder="DD-MM-YYYY -- DD-MM-YYYY"
+            required
+          />
+          <Textarea
+            minRows={4}
+            maxRows={4}
+            name="goals_milestone"
+            placeholder="Goals and Milestone"
+            required
+          />
+
+          <TextField type="file" name="banner" required />
           <Button type="submit" variant="contained">
             Save and Publish
           </Button>

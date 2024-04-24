@@ -5,7 +5,6 @@ import Lottie from "lottie-react";
 import loadingL from "@/assets/loading.json";
 const PrivateRoute = ({ children }) => {
   const auth = useAuth();
-  console.log(auth.loading);
 
   const router = useRouter();
   if (auth.loading)
