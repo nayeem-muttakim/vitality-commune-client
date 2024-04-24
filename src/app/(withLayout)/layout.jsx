@@ -1,15 +1,14 @@
-'use client'
-import Navbar from "@/components/shared/Navbar/Navbar"
-import Footer from "@/components/shared/Footer/Footer"
-import { HelmetProvider } from "react-helmet-async";
+"use client";
+import Navbar from "@/components/shared/Navbar/Navbar";
+import Footer from "@/components/shared/Footer/Footer";
 
 const Layout = ({ children }) => {
   return (
-    <HelmetProvider>
+    <div>
       <Navbar />
       {children}
-      <Footer/>
-    </HelmetProvider>
+      <Footer />
+    </div>
   );
 };
 

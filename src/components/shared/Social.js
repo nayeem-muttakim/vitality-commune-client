@@ -5,13 +5,17 @@ import { Box, Button } from "@mui/material";
 import Image from "next/image";
 import ggLogo from "@/assets/google.png";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Social = () => {
   const { googleSignIn } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const axiosPublic = useAxiosPublic();
 
   const handleGoogle = async () => {
+    if (isSubmitting) return; // Prevent double submission
+    setIsSubmitting(true);
     googleSignIn()
       .then((res) => {
         const userInfo = {
@@ -20,11 +24,13 @@ const Social = () => {
           role: "user",
         };
         axiosPublic.post("/users", userInfo).then((res) => {
+          setIsSubmitting(false);
           toast.success("Signed In");
           router.push("/");
         });
       })
       .catch((err) => {
+        setIsSubmitting(false);
         toast.error("Invalid User");
       });
   };

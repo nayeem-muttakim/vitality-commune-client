@@ -39,11 +39,11 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const updateInfo = (name,image) => {
+  const updateInfo = (name, image) => {
     setLoading(true);
     return updateProfile(auth.currentUser, {
       displayName: name,
-      photoURL:image
+      photoURL: image,
     });
   };
 
@@ -70,7 +70,7 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     });
     return () => unSubscribe();
-  }, []);
+  }, [axiosPublic]);
 
   const values = {
     user,

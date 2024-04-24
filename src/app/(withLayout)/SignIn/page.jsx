@@ -9,24 +9,32 @@ import {
 } from "@mui/material";
 import useAuth from "@/components/shared/Hooks/useAuth/page";
 import Link from "next/link";
-import { Helmet } from "react-helmet-async";
+
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Social from "../../../components/shared/Social";
+import { useState } from "react";
 const SignIn = () => {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const auth = useAuth();
   const handleLog = (e) => {
     e.preventDefault();
+    if (isSubmitting) return; // Prevent double submission
+    setIsSubmitting(true);
     const email = e.target.email.value;
     const pass = e.target.pass.value;
-    signIn(email, pass)
+    const toasted = toast.loading("Logging In");
+    auth.signIn(email, pass)
       .then((res) => {
-        toast.success("Logged In");
+        setIsSubmitting(false);
+        toast.success("Logged In", { id: toasted });
+
         router.push("/");
       })
       .catch((err) => {
-        toast.error("Invalid Email or Password");
+        setIsSubmitting(false);
+        toast.error("Invalid Email or Password",{id:toasted});
       });
   };
   return (
@@ -34,19 +42,17 @@ const SignIn = () => {
       px={1}
       sx={{ maxWidth: 600, mx: "auto", my: { xs: 3, md: 5, xl: 10 } }}
     >
-      <Helmet>
-        <title>Vitality Commune | Login</title>
-      </Helmet>
+    
       <Typography pt={2} textAlign={"center"} variant="h4">
         Login
       </Typography>
       <Social />
-      <Divider sx={{px:5,pt:4}}>or</Divider>
+      <Divider sx={{ px: 5, pt: 4 }}>or</Divider>
       <form onSubmit={handleLog}>
         <Grid sx={{ display: "grid", gap: 5, p: 5 }}>
           <TextField
             label="Email"
-            variant="outlined"
+      
             name="email"
             type="email"
             required
@@ -54,7 +60,7 @@ const SignIn = () => {
 
           <TextField
             label="Password"
-            variant="outlined"
+         
             name="pass"
             type="password"
             required

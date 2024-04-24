@@ -30,7 +30,7 @@ const pages = [
 const settings = [
   { title: "My Progress", link: "my-progress" },
   { title: "Leader Board", link: "leader-board" },
-  // { title: "Applied Jobs", link: "applied-jobs" },
+  { title: "Manage Challenges", link: "manage-challenges" },
 ];
 
 function Navbar(props) {
@@ -206,7 +206,7 @@ function Navbar(props) {
             >
               {settings.map((setting) => (
                 <Link
-                  style={{ textDecoration: "none",color:"black" }}
+                  style={{ textDecoration: "none", color: "black" }}
                   key={setting.title}
                   href={`/${setting.link}`}
                 >
