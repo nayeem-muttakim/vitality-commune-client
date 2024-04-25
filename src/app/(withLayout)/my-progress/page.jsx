@@ -3,6 +3,7 @@ import useAuth from "@/components/shared/Hooks/useAuth/page";
 import PrivateRoute from "../../../components/PrivateRoute";
 import useAxiosSecure from "@/components/shared/Hooks/useAxiosSecure/page";
 import { useQuery } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 import {
   AspectRatio,
   Box,
@@ -15,6 +16,7 @@ import {
 } from "@mui/joy";
 import Image from "next/image";
 import { Paper } from "@mui/material";
+import toast from "react-hot-toast";
 
 const MyProgress = () => {
   const auth = useAuth();
@@ -28,7 +30,64 @@ const MyProgress = () => {
       return res.data;
     },
   });
-  console.log(myParticipations);
+  const { data: user = {} } = useQuery({
+    queryKey: [auth?.user?.email, "user"],
+    queryFn: async () => {
+      const res = await axiosSecure(`/user/${auth?.user?.email}`);
+      return res.data;
+    },
+  });
+
+  const handleComplete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.patch(`/participation/mine/${id}`).then((res) => {
+          if (res.data.modifiedCount > 0) {
+            axiosSecure
+              .patch(`/user/${user?.email}`, { points: user?.points + 10 })
+              .then((res) => {
+                if (res.data.modifiedCount > 0) {
+                  toast.success("Challenge Completed");
+                  refetch();
+                }
+              });
+          }
+        });
+      }
+    });
+  };
+
+  const handleQuit = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to quit?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/participation/${id}`).then((res) => {
+          if (res.data.deletedCount) {
+            Swal.fire({
+              title: "Quitted",
+              text: `Take care of your health`,
+            });
+            refetch();
+          }
+        });
+      }
+    });
+  };
   return (
     <PrivateRoute>
       <Paper
@@ -63,14 +122,13 @@ const MyProgress = () => {
             key={participation?._id}
             sx={{
               width: "85%",
-              mx:{xs:0,sm:'auto'},
+              mx: { xs: 0, sm: "auto" },
             }}
           >
             <Card
               orientation="horizontal"
               sx={{
                 width: "100%",
-                height:200,
                 mx: "auto",
                 flexWrap: "wrap",
                 [`& > *`]: {
@@ -102,7 +160,7 @@ const MyProgress = () => {
                   fontWeight="lg"
                   textColor="text.tertiary"
                 >
-                  {participation?.type?.value}
+                  {participation?.description}
                 </Typography>
                 <Sheet
                   sx={{
@@ -117,13 +175,13 @@ const MyProgress = () => {
                 >
                   <div>
                     <Typography level="body-xs" fontWeight="lg">
-                      Description
+                      Type
                     </Typography>
                     <Typography fontWeight="lg">
-                      {participation?.description}
+                      {participation?.type?.value}
                     </Typography>
                   </div>
-                  <Divider orientation="vertical"/>
+                  <Divider orientation="vertical" />
                   <div>
                     <Typography level="body-xs" fontWeight="lg">
                       Goal
@@ -132,7 +190,7 @@ const MyProgress = () => {
                       {participation?.goals_milestone}
                     </Typography>
                   </div>
-                  <Divider orientation="vertical"/>
+                  <Divider orientation="vertical" />
                   <div>
                     <Typography level="body-xs" fontWeight="lg">
                       Reward
@@ -143,12 +201,26 @@ const MyProgress = () => {
                 <Box
                   sx={{ display: "flex", gap: 1.5, "& > button": { flex: 1 } }}
                 >
-                  <Button variant="outlined" color="danger">
+                  <Button
+                    onClick={() => handleQuit(participation?._id)}
+                    variant="outlined"
+                    color="danger"
+                  >
                     Quit
                   </Button>
-                  <Button variant="soft" color="primary">
-                    Mark as Completed
-                  </Button>
+                  {participation?.completed ? (
+                    <Button variant="soft" color="success">
+                      Completed
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleComplete(participation?._id)}
+                      variant="soft"
+                      color="primary"
+                    >
+                      Mark as Completed
+                    </Button>
+                  )}
                 </Box>
               </CardContent>
             </Card>

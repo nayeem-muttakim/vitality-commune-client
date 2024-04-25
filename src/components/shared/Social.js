@@ -22,6 +22,7 @@ const Social = () => {
           email: res?.user?.email,
           name: res?.user?.displayName,
           role: "user",
+          points: 0,
         };
         axiosPublic.post("/users", userInfo).then((res) => {
           setIsSubmitting(false);

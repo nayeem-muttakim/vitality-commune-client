@@ -15,6 +15,8 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PlayCircleOutlinedIcon from "@mui/icons-material/PlayCircleOutlined";
 import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 const Manage = () => {
   const auth = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -27,6 +29,39 @@ const Manage = () => {
       return res.data;
     },
   });
+  const handlePause = (challenge) => {
+    axiosSecure
+      .patch(`/challenge/${challenge?._id}`, { pause: !challenge?.pause })
+      .then((res) => {
+        if (res.data.modifiedCount > 0) {
+          toast.success(`Challenge ${challenge?.pause ? "Resumed" : "Paused"}`);
+          refetch();
+        }
+      });
+  };
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to Delete?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/challenge/${id}`).then((res) => {
+          if (res.data.deletedCount) {
+            Swal.fire({
+              title: "Deleted",
+              text: `Give others more challenge`,
+            });
+            refetch();
+          }
+        });
+      }
+    });
+  };
   return (
     <Box px={1}>
       {" "}
@@ -102,19 +137,27 @@ const Manage = () => {
                 borderColor: "divider",
               }}
             >
-              <IconButton>
-                {challenge?.pause ? (
-                  <PlayCircleOutlinedIcon color="green"/>
-                ) : (
-                  <PauseCircleOutlinedIcon color="warning"/>
-                )}
-              </IconButton>
-              <Divider orientation="vertical" />
+              {challenge?.pause ? (
+                <IconButton>
+                  {" "}
+                  <PlayCircleOutlinedIcon
+                    onClick={() => handlePause(challenge)}
+                    color="success"
+                  />
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => handlePause(challenge)}>
+                  {" "}
+                  <PauseCircleOutlinedIcon color="warning" />{" "}
+                </IconButton>
+              )}
+
+              {/* <Divider orientation="vertical" />
               <IconButton>
                 <EditOutlinedIcon color="primary" />
-              </IconButton>
+              </IconButton> */}
               <Divider orientation="vertical" />
-              <IconButton>
+              <IconButton onClick={() => handleDelete(challenge?._id)}>
                 <DeleteForeverOutlinedIcon color="error" />
               </IconButton>
             </CardOverflow>

@@ -24,7 +24,7 @@ const SignUp = () => {
     const pass = e.target.pass.value;
     const image = e.target.image.files[0];
     const toasted = toast.loading("Registering");
-  
+
     try {
       //upload image
       const imageData = await imageUpload(image);
@@ -36,9 +36,9 @@ const SignUp = () => {
         name: name,
         email: email,
         role: "user",
+        points: 0,
       };
       await axiosPublic.post("/users", userInfo);
-
       setIsSubmitting(false);
       toast.success("Registration Successful", { id: toasted });
       router.push("/");
