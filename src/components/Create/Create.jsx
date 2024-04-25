@@ -7,6 +7,7 @@ import useAxiosSecure from "@/components/shared/Hooks/useAxiosSecure/page";
 import useAuth from "@/components/shared/Hooks/useAuth/page";
 import toast from "react-hot-toast";
 import { imageUpload } from "@/components/Utils";
+import { useRouter } from "next/navigation";
 const Create = () => {
   const options = [
     { value: "Fitness", label: "Fitness" },
@@ -16,7 +17,8 @@ const Create = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
+  const auth = useAuth();
+  const router = useRouter();
   const handleChallenge = async (e) => {
     e.preventDefault();
     if (isSubmitting) return; // Prevent double submission
@@ -27,8 +29,8 @@ const Create = () => {
     const date_range = e.target.date_range.value;
     const goals_milestone = e.target.goals_milestone.value;
     const image = e.target.banner.files[0];
-    const host = user?.email;
-
+    const host = auth?.user?.email;
+    const toasted = toast.loading("Hosting Challenge");
     try {
       //upload image
       const imageData = await imageUpload(image);
@@ -44,9 +46,9 @@ const Create = () => {
       axiosSecure.post("/challenges", challengeInfo).then((res) => {
         if (res.data.insertedId) {
           setIsSubmitting(false);
-          toast.success("Challenge Added");
+          toast.success("Challenge Hosted", { id: toasted });
         }
-        // navigate("/dashboard/added-pets");
+        router.push("/challenges");
       });
     } catch (err) {
       setIsSubmitting(false);

@@ -1,20 +1,15 @@
 "use client";
 import useAxiosPublic from "@/components/shared/Hooks/useAxios/page";
-import {
-  AspectRatio,
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
-} from "@mui/joy";
+import { Button, Card, CardActions, CardContent } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import BookmarkAdd from "@mui/icons-material/BookmarkAddOutlined";
+import DetailModal from "@/components/DetailModal/DetailModal";
 import Image from "next/image";
 import { Box, Grid, Paper, Typography } from "@mui/material";
+
+import { useState } from "react";
+import useAuth from "@/components/shared/Hooks/useAuth/page";
 const Challenges = () => {
+  const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
   const { data: challenges = [] } = useQuery({
     queryKey: ["challenges"],
@@ -23,9 +18,11 @@ const Challenges = () => {
       return res.data;
     },
   });
-
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
-    <Box px={2} my={3}>
+    <Box px={2} my={3} minHeight={"80vh"}>
       <Paper
         square={false}
         sx={{
@@ -48,16 +45,18 @@ const Challenges = () => {
         gridTemplateColumns={{
           xs: "repeat(1,1fr)",
           sm: "repeat(2,1fr)",
+          md: "repeat(3,1fr)",
           lg: "repeat(4,1fr)",
         }}
         gap={2}
       >
         {challenges?.map((challenge) => (
           <Card
-            key={challenge?.title}
+            key={challenge?._id}
             variant="outlined"
             sx={{
-              width: 320,
+              width: 300,
+              mx: "auto",
             }}
           >
             <Box
@@ -67,27 +66,28 @@ const Challenges = () => {
                 alignItems: "center",
               }}
             >
-              <Image width={320} height={180} src={challenge?.banner} alt="" />
+              <Image width={300} height={180} src={challenge?.banner} alt="" />
             </Box>
             <CardContent>
               <Typography level="title-lg">{challenge?.title}</Typography>
               <Typography level="body-sm">{challenge?.description}</Typography>
             </CardContent>
-            <CardActions buttonFlex="0 1 120px">
-              <IconButton
-                variant="outlined"
-                color="neutral"
-                sx={{ mr: "auto" }}
-              >
-                <FavoriteBorder />
-              </IconButton>
-              <Button variant="outlined" color="neutral">
+            <CardActions buttonFlex="120px">
+              <Button onClick={handleOpen} variant="outlined" color="neutral">
                 View
               </Button>
-              <Button variant="solid" color="primary">
-                Join
-              </Button>
+
+            {user ?   <Button variant="solid" color="primary">
+                Participate
+              </Button> : <Typography>
+                Log in to participate
+                </Typography>}
             </CardActions>
+            <DetailModal
+              challenge={challenge}
+              open={open}
+              handleClose={handleClose}
+            />
           </Card>
         ))}
       </Grid>
