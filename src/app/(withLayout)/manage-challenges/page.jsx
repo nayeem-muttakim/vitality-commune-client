@@ -14,7 +14,7 @@ const ManageChallenges = () => {
   };
   return (
     <PrivateRoute>
-      <Box sx={{ width: "60%", mx: "auto", textAlign: "center" }}>
+      <Box sx={{ width: {xs:'100%',sm:"80%",lg:"60%"}, mx: "auto", textAlign: "center" }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList

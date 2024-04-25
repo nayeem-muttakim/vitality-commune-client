@@ -42,6 +42,7 @@ const Create = () => {
         goals_milestone,
         banner: imageData?.url,
         host,
+        pause:false
       };
       axiosSecure.post("/challenges", challengeInfo).then((res) => {
         if (res.data.insertedId) {
@@ -60,28 +61,28 @@ const Create = () => {
       <Paper
         square={false}
         sx={{
-          px: 4,
+          px: 1,
           py: 2,
-          my: 2,
+          my: 1,
           mx: "auto",
           backgroundColor: "#cbf3f0",
+          textAlign:"center"
         }}
         elevation={3}
       >
-        <Typography variant="h4">Create Challenge</Typography>
+        <Typography variant="h5">Create Challenge</Typography>
       </Paper>
       <form onSubmit={handleChallenge}>
         <Grid
           sx={{
             display: "grid",
             gap: 2,
-            p: 5,
+            py: 4,
             maxWidth: 600,
             mx: "auto",
-            my: 10,
           }}
         >
-          <TextField label="Title" name="title" required />
+          <TextField label="Title" name="title" required/>
           <Select
             required
             placeholder="Challenge Type"

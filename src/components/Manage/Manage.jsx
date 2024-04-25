@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../shared/Hooks/useAuth/page";
 import useAxiosSecure from "../shared/Hooks/useAxiosSecure/page";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Paper, Typography } from "@mui/material";
 import {
   AspectRatio,
   Card,
@@ -11,10 +11,10 @@ import {
   Divider,
 } from "@mui/joy";
 import Image from "next/image";
-import BallotIcon from "@mui/icons-material/Ballot";
-import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import PlayCircleOutlinedIcon from "@mui/icons-material/PlayCircleOutlined";
+import PauseCircleOutlinedIcon from "@mui/icons-material/PauseCircleOutlined";
 const Manage = () => {
   const auth = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -33,7 +33,7 @@ const Manage = () => {
       <Paper
         square={false}
         sx={{
-          px: 4,
+          px: 1,
           py: 2,
           my: 2,
           mx: "auto",
@@ -41,7 +41,7 @@ const Manage = () => {
         }}
         elevation={3}
       >
-        <Typography variant="h4">Manage Challenges</Typography>
+        <Typography variant="h5">Manage Challenges</Typography>
       </Paper>
       <Grid
         px={{ lg: 20 }}
@@ -59,7 +59,7 @@ const Manage = () => {
         {myChallenges?.map((challenge) => (
           <Card
             key={challenge?._id}
-            sx={{ borderRadius: 0, width: 300, maxWidth: "100%" }}
+            sx={{ borderRadius: 0, minWidth: 240, mx: "auto" }}
           >
             <CardContent>
               <Typography level="body-xs">{challenge?.date_range}</Typography>
@@ -76,7 +76,7 @@ const Manage = () => {
                   sx={{ minWidth: 70, "& img[data-first-child]": { p: 1.5 } }}
                 >
                   <Image
-                    width={300}
+                    width={240}
                     height={200}
                     src={challenge?.banner}
                     alt=""
@@ -85,7 +85,9 @@ const Manage = () => {
               </CardOverflow>
               <CardContent>
                 <Typography level="title-md">{challenge?.title}</Typography>
-                <Typography level="body-sm">{challenge?.goals_milestone}</Typography>
+                <Typography level="body-sm">
+                  {challenge?.goals_milestone}
+                </Typography>
               </CardContent>
             </Card>
             <CardOverflow
@@ -100,26 +102,21 @@ const Manage = () => {
                 borderColor: "divider",
               }}
             >
-              <Typography
-                startDecorator={<BallotIcon color="danger" />}
-                level="title-sm"
-              >
-                13
-              </Typography>
+              <IconButton>
+                {challenge?.pause ? (
+                  <PlayCircleOutlinedIcon color="green"/>
+                ) : (
+                  <PauseCircleOutlinedIcon color="warning"/>
+                )}
+              </IconButton>
               <Divider orientation="vertical" />
-              <Typography
-                startDecorator={<CommentOutlinedIcon />}
-                level="title-sm"
-              >
-                9
-              </Typography>
+              <IconButton>
+                <EditOutlinedIcon color="primary" />
+              </IconButton>
               <Divider orientation="vertical" />
-              <Typography
-                startDecorator={<InboxOutlinedIcon />}
-                level="title-sm"
-              >
-                32
-              </Typography>
+              <IconButton>
+                <DeleteForeverOutlinedIcon color="error" />
+              </IconButton>
             </CardOverflow>
           </Card>
         ))}
