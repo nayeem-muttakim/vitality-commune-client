@@ -1,10 +1,11 @@
 "use client";
 import {
-  Box,
   Grid,
   Paper,
   Table,
   TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Typography,
@@ -12,12 +13,6 @@ import {
 import PrivateRoute from "../../../components/PrivateRoute";
 import useAxiosSecure from "@/components/shared/Hooks/useAxiosSecure/page";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import {
-  getCoreRowModel,
-  useReactTable,
-  flexRender,
-} from "@tanstack/react-table";
 
 const LeaderBoard = () => {
   const axiosSecure = useAxiosSecure();
@@ -28,28 +23,9 @@ const LeaderBoard = () => {
       return res.data;
     },
   });
-  const data = useMemo(() => LeaderBoard, [LeaderBoard]);
-  /** @type import("@tanstack/react-table").ColumnDef<any>*/
-  const columns = [
-    { header: "Position" },
-    {
-      header: "Name",
-    },
-    {
-      header: "Email",
-    },
-    {
-      header: "Points",
-    },
-  ];
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
   return (
     <PrivateRoute>
-      <Grid className="w3-container">
+      <Grid px={2}>
         {" "}
         <Paper
           square={false}
@@ -66,35 +42,35 @@ const LeaderBoard = () => {
         >
           <Typography variant="h4">Leader Board</Typography>
         </Paper>
-        <Grid sx={{ maxWidth: 1000, mx: "auto", overflowX: "auto" }}>
-          <Table>
-            <TableHead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </th>
-                  ))}
+        <Grid sx={{ maxWidth: 1000, mx: "auto", overflowX: "auto", border:1,borderRadius:3,my:3 }}>
+          <TableContainer>
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Position</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Email</TableCell>
+                  <TableCell align="center">Points</TableCell>
                 </TableRow>
-              ))}
-            </TableHead>
-            <TableBody>
-              {LeaderBoard.map((lead, index) => (
-                <>
-                  <TableRow key={lead._id}>
-                    <th>{index + 1}</th>
-                    <th>{lead?.name}</th>
-                    <th>{lead?.email}</th>
-                    <th>{lead?.points} </th>
+              </TableHead>
+              <TableBody>
+                {LeaderBoard.map((lead, index) => (
+                  <TableRow
+                    key={lead?._id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell align="center">{lead?.name}</TableCell>
+                    <TableCell align="center">{lead?.email}</TableCell>
+                    <TableCell align="center">{lead?.points}</TableCell>
+                    
                   </TableRow>
-                </>
-              ))}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
       </Grid>
     </PrivateRoute>

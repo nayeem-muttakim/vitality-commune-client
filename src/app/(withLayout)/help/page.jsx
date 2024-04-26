@@ -16,15 +16,15 @@ export default function FAQCard() {
       sx={{
         textAlign: "center",
         maxWidth: "100%",
-        width: 500,
-        mx: "auto",
+        my:2,
+        mx:"auto"
       }}
     >
       <CardOverflow
         variant="solid"
         color="primary"
         sx={{
-          flex: "0 0 200px",
+          flex: "0 0 100px",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -38,7 +38,7 @@ export default function FAQCard() {
           FAQs answered, see if yours is one of them.
         </Typography>
       </CardOverflow>
-      <CardContent sx={{ gap: 1.5, minWidth: 200 }}>
+      <CardContent sx={{ gap: 1.5, minWidth: 130 }}>
         <AspectRatio ratio="19/8" objectFit="contain" variant="plain">
           <Image
             width={300}
@@ -50,8 +50,7 @@ export default function FAQCard() {
         <CardContent>
           <Typography level="title-lg">Need Some Help?</Typography>
           <Typography fontSize="sm" sx={{ mt: 0.5 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor.
+          Ask us anytime
           </Typography>
         </CardContent>
         <Button

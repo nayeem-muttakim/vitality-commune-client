@@ -1,6 +1,6 @@
 "use client";
 import useAxiosPublic from "@/components/shared/Hooks/useAxios/page";
-import { Button, Card, CardActions, CardContent } from "@mui/joy";
+import { Button, Card, CardActions, CardContent, Chip } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { Box, Grid, Paper, Typography } from "@mui/material";
@@ -100,6 +100,7 @@ const Challenges = () => {
             <CardContent>
               <Typography level="title-lg">{challenge?.title}</Typography>
               <Typography level="body-sm">{challenge?.description}</Typography>
+              <Chip >10 Points</Chip>
             </CardContent>
             <CardActions buttonFlex="120px">
               <Link href={`/challenges/${challenge?._id}`}>
